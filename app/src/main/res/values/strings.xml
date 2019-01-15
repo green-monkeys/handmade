@@ -11,4 +11,6 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+    <string name="com_auth0_domain">greenmonkeys.auth0.com</string>
+    <string name="com_auth0_client_id">rYIkzFhY5cSS3D26QgbSz4DdzyDXW2la</string>
 </resources>
