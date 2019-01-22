@@ -16,16 +16,17 @@ object Security {
     }
 
     // Generates salted and peppered bcrypt password hash
-    fun generatePassword(password: String): Password {
+    fun generatePasswordHash(password: String): Password {
         val salt = generateRandomString(10)
-        val hash = BCrypt.withDefaults().hashToString(12, (password + salt + Random.nextInt(32,126).toChar()).toCharArray())
+        val hash = BCrypt.withDefaults().hashToString(12, (password + salt + Random.nextInt(65,122).toChar()).toCharArray())
         return Password(hash, salt)
     }
 
-    fun passwordIsValid(password: Password, guess: String): Boolean {
-        for (i in 32..126) {
-            val hash = BCrypt.withDefaults().hashToString(12, (guess + password.salt + i.toChar()).toCharArray())
-            if (hash == password.hash)
+    fun passwordIsCorrect(password: Password, guess: String): Boolean {
+        val verifyer = BCrypt.verifyer()
+        for (i in 65..122) {
+            val passwordIsValid = verifyer.verify((guess + password.salt + i.toChar()).toCharArray(), password.hash)
+            if (passwordIsValid.verified)
                 return true
         }
         return false

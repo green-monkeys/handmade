@@ -14,6 +14,12 @@ interface ArtisanDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertArtisan(artisan: Artisan)
 
-    @Query("SELECT * FROM Artisan WHERE id = :id AND cga_id = :cgaId")
-    fun getArtisanById(id: Int, cgaId: Int): LiveData<Artisan>
+    @Query("SELECT 1 FROM Artisan WHERE cga_id = :cgaId AND email = :email")
+    fun containsArtisan(email: String, cgaId: Int): Boolean
+
+    @Query("SELECT password as hash, salt FROM Artisan WHERE email = :email AND cga_id = :cgaId")
+    fun getArtisanPasswordByEmail(email: String, cgaId: Int): Security.Password
+
+    @Query("SELECT * FROM Artisan WHERE email = :email AND cga_id = :cgaId")
+    fun getArtisanByEmail(email: String, cgaId: Int): Artisan
 }
