@@ -5,9 +5,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 object DatabaseFactory {
-    var db: RoomDatabase? = null
+    var db: AppDatabase? = null
 
-    fun getDatabase(applicationContext: Context): RoomDatabase {
+    fun getDatabase(applicationContext: Context): AppDatabase {
         if (db == null) {
             db = Room.databaseBuilder(
                 applicationContext,

@@ -3,7 +3,13 @@ package com.greenmonkeys.handmade.persistence
 import androidx.room.TypeConverter
 
 enum class PhoneType {
-    NONE, SMART, DUMB
+    NONE {
+        override fun toString() = "none"
+    }, SMART {
+        override fun toString() = "smart"
+    }, DUMB {
+        override fun toString() = "dumb"
+    }
 }
 
 class PhoneTypeConverters {
