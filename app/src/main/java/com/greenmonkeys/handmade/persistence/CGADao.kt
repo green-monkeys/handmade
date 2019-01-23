@@ -23,7 +23,9 @@ interface CGADao {
     @Query("SELECT * FROM CGA WHERE email = :email")
     fun getCGAByEmail(email: String): CGA
 
-
     @Query("SELECT 1 FROM CGA WHERE id = :cgaId")
     fun cgaIdIsValid(cgaId: Int): Boolean
+
+    @Query("SELECT * FROM Artisan WHERE cga_id = :cgaId")
+    fun getArtisansForCGA(cgaId: Int): List<Artisan>
 }
