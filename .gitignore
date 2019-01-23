@@ -9,3 +9,8 @@
 /build
 /captures
 .externalNativeBuild
+keystore.properties
+key_store
+app/release/
+api_key.txt
+Amazon-Android-SDKs/
