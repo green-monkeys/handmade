@@ -10,8 +10,3 @@
 - Benjamin Griffith
 - Edward Lam-Mendoza
 
-## Notes on Application Signing Key
-
-Two files are needed to function with Login with Amazon Developer account, and for the app to work. They are available in the Discord.
-- `keystore`
-- `keystore.properties`
