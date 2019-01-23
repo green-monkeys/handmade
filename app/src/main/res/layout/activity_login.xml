@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
     tools:context=".LoginActivity">
 
     <ImageView
@@ -144,4 +145,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_button" />
 
+    <!--
+    <ImageButton
+        android:id="@+id/login_with_amazon"
+        android:layout_width="163dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/btnlwa_drkgry_loginwithamazon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_button"
+        app:srcCompat="@drawable/btnlwa_drkgry_loginwithamazon" />
+     -->
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
