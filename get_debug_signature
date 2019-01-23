@@ -1,0 +1,3 @@
+#!/bin/bash
+
+keytool -list -v -keystore /Users/jtorres/.android/debug.keystore
