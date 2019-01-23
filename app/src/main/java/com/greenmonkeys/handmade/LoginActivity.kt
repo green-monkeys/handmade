@@ -14,12 +14,7 @@ import com.greenmonkeys.handmade.persistence.DatabaseFactory
 import com.greenmonkeys.handmade.persistence.Security
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import com.amazon.identity.auth.device.api.workflow.RequestContext
-import com.amazon.identity.auth.device.AuthError
-import com.amazon.identity.auth.device.api.authorization.*
-import com.amazon.identity.auth.device.api.authorization.ProfileScope
-import com.amazon.identity.auth.device.api.authorization.AuthorizeRequest
-import com.amazon.identity.auth.device.api.authorization.AuthorizationManager
+//import com.amazon.identity.auth.device.api.workflow.RequestContext
 
 class LoginActivity : AppCompatActivity() {
     private var emailField: EditText? = null
@@ -29,7 +24,7 @@ class LoginActivity : AppCompatActivity() {
     private var accountType: RadioGroup? = null
     private var errorTextField: TextView? = null
     private var db: AppDatabase? = null
-    private lateinit var requestContext: RequestContext
+    //private lateinit var requestContext: RequestContext
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +46,7 @@ class LoginActivity : AppCompatActivity() {
         }
         db = DatabaseFactory.getDatabase(applicationContext)
 
+        /*
         requestContext = RequestContext.create(applicationContext)
 
         requestContext.registerListener(object : AuthorizeListener() {
@@ -74,6 +70,7 @@ class LoginActivity : AppCompatActivity() {
                 // TODO: IMPLEMENT ON CANCEL AUTH
             }
         })
+        */
 
 
         // TODO: FINISH THIS BELOW :)
