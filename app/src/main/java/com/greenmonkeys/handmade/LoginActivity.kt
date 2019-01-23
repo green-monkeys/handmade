@@ -14,6 +14,12 @@ import com.greenmonkeys.handmade.persistence.DatabaseFactory
 import com.greenmonkeys.handmade.persistence.Security
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import com.amazon.identity.auth.device.api.workflow.RequestContext
+import com.amazon.identity.auth.device.AuthError
+import com.amazon.identity.auth.device.api.authorization.*
+import com.amazon.identity.auth.device.api.authorization.ProfileScope
+import com.amazon.identity.auth.device.api.authorization.AuthorizeRequest
+import com.amazon.identity.auth.device.api.authorization.AuthorizationManager
 
 class LoginActivity : AppCompatActivity() {
     private var emailField: EditText? = null
@@ -23,6 +29,8 @@ class LoginActivity : AppCompatActivity() {
     private var accountType: RadioGroup? = null
     private var errorTextField: TextView? = null
     private var db: AppDatabase? = null
+    private lateinit var requestContext: RequestContext
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +50,45 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         db = DatabaseFactory.getDatabase(applicationContext)
+
+        requestContext = RequestContext.create(applicationContext)
+
+        requestContext.registerListener(object : AuthorizeListener() {
+
+            /* Authorization was completed successfully. */
+            override fun onSuccess(result: AuthorizeResult) {
+                /* Your app is now authorized for the requested scopes */
+                // TODO: IMPLEMENT ON SUCCESS AUTH
+            }
+
+            /* There was an error during the attempt to authorize the application. */
+            override fun onError(ae: AuthError) {
+                /* Inform the user of the error */
+                System.out.println("ERROR MAFK")
+                // TODO: IMPLEMENT ON ERROR AUTH
+            }
+
+            /* Authorization was cancelled before it could be completed. */
+            override fun onCancel(cancellation: AuthCancellation) {
+                /* Reset the UI to a ready-to-login state */
+                // TODO: IMPLEMENT ON CANCEL AUTH
+            }
+        })
+
+
+        // TODO: FINISH THIS BELOW :)
+        // Find the button with the login_with_amazon ID
+        // and set up a click handler
+        /*
+        val loginButton: View = findViewById(R.id.login_with_amazon)
+        loginButton.setOnClickListener {
+            AuthorizationManager.authorize(
+                AuthorizeRequest.Builder(requestContext)
+                    .addScopes(ProfileScope.profile(), ProfileScope.postalCode())
+                    .build()
+            )
+        }
+        */
     }
 
     fun onRegisterClick(view: View) {
