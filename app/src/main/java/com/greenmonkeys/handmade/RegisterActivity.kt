@@ -6,10 +6,7 @@ import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioGroup
-import android.widget.TextView
+import android.widget.*
 import com.greenmonkeys.handmade.persistence.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -77,6 +74,7 @@ class RegisterActivity : AppCompatActivity() {
     fun onRegisterClick(view: View) {
         var fieldsAreValid = true
 
+        // Validate CGA ID
         val cgaId = cgaIdField?.text.toString()
         if (cgaIdField?.visibility != View.GONE) {
             if (cgaId.isEmpty() || cgaId.toIntOrNull() == null) {
@@ -99,6 +97,7 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
+        // Validate First Name
         val firstName = firstNameField?.text.toString()
         if (firstName.isEmpty()) {
             firstNameField?.setBackgroundColor(Color.RED)
@@ -106,6 +105,7 @@ class RegisterActivity : AppCompatActivity() {
         } else
             firstNameField?.background = firstNameFieldBackground
 
+        // Validate Last Name
         val lastName = lastNameField?.text.toString()
         if (lastName.isEmpty()) {
             lastNameField?.setBackgroundColor(Color.RED)
@@ -113,6 +113,7 @@ class RegisterActivity : AppCompatActivity() {
         } else
             lastNameField?.background = lastNameFieldBackground
 
+        // Validate Phone Number
         val phone = phoneNumberField?.text.toString()
         if (phone.isEmpty()) {
             phoneNumberField?.setBackgroundColor(Color.RED)
@@ -120,6 +121,7 @@ class RegisterActivity : AppCompatActivity() {
         } else
             phoneNumberField?.background = phoneNumberFieldBackground
 
+        // Validate Email
         val email = emailField?.text.toString()
         if (!Security.isValidEmail(email)) {
             emailField?.setBackgroundColor(Color.RED)
@@ -127,39 +129,48 @@ class RegisterActivity : AppCompatActivity() {
         } else
             emailField?.background = emailFieldBackground
 
+        // Validate Password EXISTS (Not that it is correct)
         val password = passwordField?.text.toString()
         val passwordConfirm = passwordConfirmField?.text.toString()
 
-        val hashedPassword = if (password == passwordConfirm &&
-            (password.length >= 8)
-        ) {
-            passwordField?.background = passwordFieldBackground
-            passwordConfirmField?.background = passwordConfirmFieldBackground
-            Security.generatePasswordHash(password)
-        } else if (password.length < 8) {
-            passwordField?.setBackgroundColor(Color.RED)
-            fieldsAreValid = false
-            null
-        } else {
-            passwordConfirmField?.setBackgroundColor(Color.RED)
-            fieldsAreValid = false
-            null
-        }
+        val hashedPassword =
+            if (password == passwordConfirm && (password.length >= 8)) {
+                passwordField?.background = passwordFieldBackground
+                passwordConfirmField?.background = passwordConfirmFieldBackground
+                Security.generatePasswordHash(password)
+            } else if (password.length < 8 && passwordConfirm != password) {
+                passwordField?.setBackgroundColor(Color.RED)
+                passwordConfirmField?.setBackgroundColor(Color.RED)
+                fieldsAreValid = false
+                null
+            } else if (password.length < 8) {
+                passwordField?.setBackgroundColor(Color.RED)
+                fieldsAreValid = false
+                null
+            } else {
+                passwordConfirmField?.setBackgroundColor(Color.RED)
+                fieldsAreValid = false
+                null
+            }
 
         val intent = Intent(this, HomeActivity::class.java)
 
         if (hashedPassword != null && fieldsAreValid) {
             if (accountTypeGroup?.checkedRadioButtonId == R.id.artisan) {
+                val artisan = Artisan(
+                    cgaId = cgaId.toInt(),
+                    firstName = firstName,
+                    lastName = lastName,
+                    email = email,
+                    password = hashedPassword.hash,
+                    salt = hashedPassword.salt,
+                    phone = phone,
+                    phoneType = PhoneType.SMART,
+                    smsNotifications = true
+                )
+
+                // Done asynchronously because DB accesses on the main thread are a no-no
                 doAsync {
-                    val artisan = Artisan(
-                        cgaId = cgaId.toInt(),
-                        email = email,
-                        password = hashedPassword.hash,
-                        salt = hashedPassword.salt,
-                        phone = phone,
-                        phoneType = PhoneType.SMART,
-                        smsNotifications = true
-                    )
                     val artisanExists = db?.artisanDao()?.containsArtisan(artisan.email, artisan.cgaId)
                     if (artisanExists == null || artisanExists == false) {
                         db?.artisanDao()?.insertArtisan(artisan)
@@ -168,15 +179,12 @@ class RegisterActivity : AppCompatActivity() {
                                 intent.putExtra("ACCOUNT_TYPE", "artisan")
                                 intent.putExtra("cga_id", cgaId)
                                 intent.putExtra("email", email)
-                                intent.putExtra("password", hashedPassword.hash)
-                                intent.putExtra("salt", hashedPassword.salt)
-                                intent.putExtra("phone", phone)
-                                intent.putExtra("phone_type", artisan.phoneType.toString())
-                                intent.putExtra("sms_notifications", artisan.smsNotifications)
                             })
                         }
                     } else {
                         uiThread {
+                            errorTextField?.text = "E-mail already exists in database for given CGA ID."
+                            errorTextField?.visibility = View.VISIBLE
                             emailField?.setBackgroundColor(Color.RED)
                             cgaIdField?.setBackgroundColor(Color.RED)
                             fieldsAreValid = false
@@ -184,26 +192,30 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 }
             } else if (accountTypeGroup?.checkedRadioButtonId == R.id.cga) {
+                val cga = CGA(
+                    id = 0,
+                    firstName = firstName,
+                    lastName = lastName,
+                    email = email,
+                    password = hashedPassword.hash,
+                    salt = hashedPassword.salt,
+                    phone = phone
+                )
+
+                // Done asynchronously because DB accesses on the main thread are a no-no
                 doAsync {
-                    val cga = CGA(
-                        id = 0,
-                        email = email,
-                        password = hashedPassword.hash,
-                        salt = hashedPassword.salt,
-                        phone = phone
-                    )
                     if (db?.cgaDao()?.containsCGA(cga.email) == true) {
-                        errorTextField?.text = "E-mail already exists in database."
-                        errorTextField?.visibility = View.VISIBLE
+                        uiThread {
+                            errorTextField?.text = "E-mail already exists in database."
+                            errorTextField?.visibility = View.VISIBLE
+                            fieldsAreValid = false
+                        }
                     } else {
                         db?.cgaDao()?.insertCGA(cga)
                         uiThread {
                             startActivity(intent.apply {
                                 intent.putExtra("ACCOUNT_TYPE", "cga")
                                 intent.putExtra("email", email)
-                                intent.putExtra("password", hashedPassword.hash)
-                                intent.putExtra("salt", hashedPassword.salt)
-                                intent.putExtra("phone", phone)
                             })
                         }
                     }

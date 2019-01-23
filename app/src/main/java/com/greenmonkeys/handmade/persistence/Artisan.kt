@@ -9,6 +9,8 @@ import androidx.room.*
 )
 data class Artisan(
     @ColumnInfo(name = "cga_id") val cgaId: Int,
+    val firstName: String,
+    val lastName: String,
     val email: String,
     val password: String,
     val salt: String,
@@ -17,6 +19,10 @@ data class Artisan(
     val smsNotifications: Boolean
 ) {
     override fun toString(): String {
-        return "Artisan($cgaId,$email,$password,$salt,$phone,$phoneType,$smsNotifications)"
+        return "Artisan(cga_id=$cgaId,email=$email)"
+    }
+
+    fun getFullName(): String {
+        return "$firstName $lastName"
     }
 }

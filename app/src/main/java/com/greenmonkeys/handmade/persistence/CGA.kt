@@ -8,12 +8,18 @@ import androidx.room.PrimaryKey
 @Entity(indices = [Index(value = ["email"], unique = true)])
 data class CGA(
     @PrimaryKey(autoGenerate = true) val id: Int,
+    val firstName: String,
+    val lastName: String,
     val email: String,
     val password: String,
     val salt: String,
     val phone: String
 ) {
     override fun toString(): String {
-        return "CGA($id,$email,$password,$salt,$phone)"
+        return "CGA(id=$id,email=$email)"
+    }
+
+    fun getFullName(): String {
+        return "$firstName $lastName"
     }
 }
