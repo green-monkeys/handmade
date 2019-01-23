@@ -1,5 +1,6 @@
 package com.greenmonkeys.handmade
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -9,8 +10,6 @@ import com.amazon.identity.auth.device.api.authorization.*
 import com.amazon.identity.auth.device.api.authorization.ProfileScope
 import com.amazon.identity.auth.device.api.authorization.AuthorizeRequest
 import com.amazon.identity.auth.device.api.authorization.AuthorizationManager
-
-
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var requestContext: RequestContext
@@ -55,5 +54,10 @@ class LoginActivity : AppCompatActivity() {
                     .build()
             )
         }
+    }
+
+    fun onRegisterClick(view: View) {
+        val intent = Intent(this, RegisterActivity::class.java).apply {}
+        startActivity(intent)
     }
 }
