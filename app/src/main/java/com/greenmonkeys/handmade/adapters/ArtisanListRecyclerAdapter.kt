@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.greenmonkeys.handmade.R
 import com.greenmonkeys.handmade.persistence.Artisan
+import com.greenmonkeys.handmade.R
 
 class ArtisanListRecyclerAdapter(private val values: List<Artisan>): RecyclerView.Adapter<ArtisanListRecyclerAdapter.ViewHolder>() {
     override fun getItemCount() = values.size

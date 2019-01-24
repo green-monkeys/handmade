@@ -3,10 +3,13 @@ package com.greenmonkeys.handmade
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.RadioGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.greenmonkeys.handmade.persistence.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread

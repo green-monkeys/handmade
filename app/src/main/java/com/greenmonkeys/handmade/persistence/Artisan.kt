@@ -1,6 +1,9 @@
 package com.greenmonkeys.handmade.persistence
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 
 @Entity(
     foreignKeys = [ForeignKey(entity = CGA::class, parentColumns = arrayOf("id"), childColumns = arrayOf("cga_id"))],
