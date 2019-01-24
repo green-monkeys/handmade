@@ -2,7 +2,6 @@ package com.greenmonkeys.handmade.persistence
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
 
 object DatabaseFactory {
     var db: AppDatabase? = null
