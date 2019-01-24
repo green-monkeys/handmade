@@ -1,14 +1,11 @@
 package com.greenmonkeys.handmade
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.greenmonkeys.handmade.adapters.ArtisanListRecyclerAdapter
-import com.greenmonkeys.handmade.persistence.Artisan
-import com.greenmonkeys.handmade.persistence.CGA
 import com.greenmonkeys.handmade.persistence.DatabaseFactory
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
