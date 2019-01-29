@@ -45,6 +45,7 @@ dependencies {
     //implementation 'com.auth0.android:auth0:1.+'
     //implementation files('libs/Amazon-Android-SDKs/LoginWithAmazon/login-with-amazon-sdk.jar')
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation "com.commonsware.cwac:saferoom:1.0.0"
 }
 
 project.afterEvaluate {
