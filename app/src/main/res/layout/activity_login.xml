@@ -145,6 +145,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_button" />
 
+    <!--
     <ImageButton
         android:id="@+id/login_with_amazon"
         android:layout_width="163dp"
@@ -157,6 +158,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/register_button"
         app:srcCompat="@drawable/btnlwa_drkgry_loginwithamazon" />
+    -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
