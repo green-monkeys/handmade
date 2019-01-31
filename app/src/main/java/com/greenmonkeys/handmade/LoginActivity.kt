@@ -3,23 +3,18 @@ package com.greenmonkeys.handmade
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import com.amazon.identity.auth.device.AuthError
-import com.amazon.identity.auth.device.api.Listener
-import com.amazon.identity.auth.device.api.authorization.*
-import com.amazon.identity.auth.device.api.workflow.RequestContext
 import com.greenmonkeys.handmade.persistence.AppDatabase
 import com.greenmonkeys.handmade.persistence.DatabaseFactory
 import com.greenmonkeys.handmade.persistence.Security
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-
+//import com.amazon.identity.auth.device.api.workflow.RequestContext
 
 class LoginActivity : AppCompatActivity() {
     private var emailField: EditText? = null
@@ -29,35 +24,12 @@ class LoginActivity : AppCompatActivity() {
     private var accountType: RadioGroup? = null
     private var errorTextField: TextView? = null
     private var db: AppDatabase? = null
-    private lateinit var requestContext: RequestContext
+    //private lateinit var requestContext: RequestContext
 
-
-    override fun onStart() {
-        super.onStart()
-        val scopes = arrayOf(ProfileScope.profile(), ProfileScope.postalCode())
-        AuthorizationManager.getToken(this, scopes, object : Listener<AuthorizeResult, AuthError> {
-
-            override fun onSuccess(result: AuthorizeResult) {
-                if (result.accessToken != null) {
-                    /* The user is signed in */
-                    // TODO: jump straight to home
-                } else {
-                    /* The user is not signed in */
-                    // TODO: continue
-                }
-            }
-
-            override fun onError(ae: AuthError) {
-                /* The user is not signed in */
-                // TODO: continue
-            }
-        })
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        requestContext = RequestContext.create(this)
 
         emailField = findViewById(R.id.email_field)
         emailBackground = emailField?.background
@@ -73,6 +45,9 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         db = DatabaseFactory.getDatabase(applicationContext)
+
+        /*
+        requestContext = RequestContext.create(applicationContext)
 
         requestContext.registerListener(object : AuthorizeListener() {
 
@@ -95,28 +70,30 @@ class LoginActivity : AppCompatActivity() {
                 // TODO: IMPLEMENT ON CANCEL AUTH
             }
         })
+        */
 
+
+        // TODO: FINISH THIS BELOW :)
         // Find the button with the login_with_amazon ID
         // and set up a click handler
-        val loginButton : ImageButton = findViewById(R.id.login_with_amazon)
+        /*
+        val loginButton: View = findViewById(R.id.login_with_amazon)
         loginButton.setOnClickListener {
-            AuthorizationManager.authorize(AuthorizeRequest.Builder(requestContext)
-                .addScopes(ProfileScope.profile(), ProfileScope.postalCode())
-                .build())
+            AuthorizationManager.authorize(
+                AuthorizeRequest.Builder(requestContext)
+                    .addScopes(ProfileScope.profile(), ProfileScope.postalCode())
+                    .build()
+            )
         }
+        */
     }
 
-    override fun onResume() {
-        super.onResume()
-        requestContext.onResume()
-    }
-
-    fun onRegisterClick(view : View) {
+    fun onRegisterClick(view: View) {
         val intent = Intent(this, RegisterActivity::class.java).apply {}
         startActivity(intent)
     }
 
-    fun onSubmitClick(view : View) {
+    fun onSubmitClick(view: View) {
         val requiresCGAId = accountType?.checkedRadioButtonId == R.id.artisan_group_button
         val cgaId = cgaField?.text.toString().toIntOrNull()
         val email = emailField?.text.toString()
