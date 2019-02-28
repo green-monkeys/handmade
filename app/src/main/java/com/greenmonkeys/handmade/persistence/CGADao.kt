@@ -13,18 +13,9 @@ interface CGADao {
     @Query("SELECT 1 FROM CGA WHERE email = :email")
     fun containsCGA(email: String): Boolean
 
-    @Query("SELECT * FROM CGA WHERE id = :id")
-    fun getCGAById(id: Int): CGA
-
-    @Query("SELECT password as hash, salt FROM CGA WHERE email = :email")
-    fun getCGAPasswordByEmail(email: String): Security.Password
-
     @Query("SELECT * FROM CGA WHERE email = :email")
     fun getCGAByEmail(email: String): CGA
 
-    @Query("SELECT 1 FROM CGA WHERE id = :cgaId")
-    fun cgaIdIsValid(cgaId: Int): Boolean
-
     @Query("SELECT * FROM Artisan WHERE cga_id = :cgaId")
-    fun getArtisansForCGA(cgaId: Int): List<Artisan>
+    fun getArtisansForCGA(cgaId: String): List<Artisan>
 }
