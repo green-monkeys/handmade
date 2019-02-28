@@ -8,7 +8,7 @@
     tools:context=".LoginActivity">
 
     <ImageView
-        android:id="@+id/logo"
+        android:id="@+id/activity_login_logo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -22,8 +22,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/error_text_field"
-        android:layout_width="wrap_content"
+        android:id="@+id/activity_login_error_text_field"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
@@ -33,10 +33,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_logo" />
 
     <EditText
-        android:id="@+id/cga_id_field"
+        android:id="@+id/activity_login_cga_id_field"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -44,15 +44,15 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="CGA ID"
-        android:inputType="number"
-        android:visibility="gone"
+        android:inputType="textEmailAddress"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/error_text_field" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_error_text_field" />
 
     <EditText
-        android:id="@+id/email_field"
+        android:id="@+id/activity_login_email_field"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -63,10 +63,10 @@
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cga_id_field" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_cga_id_field" />
 
     <EditText
-        android:id="@+id/password_field"
+        android:id="@+id/activity_login_password_field"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -77,38 +77,10 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_field" />
-
-    <RadioGroup
-        android:id="@+id/account_type_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:checkedButton="@+id/cga_group_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_field">
-
-        <RadioButton
-            android:id="@+id/cga_group_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="CGA" />
-
-        <RadioButton
-            android:id="@+id/artisan_group_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Artisan" />
-
-    </RadioGroup>
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_email_field" />
 
     <CheckBox
-        android:id="@+id/save_login_box"
+        android:id="@+id/activity_login_save_login_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -117,10 +89,10 @@
         android:text="Remember Login?"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/account_type_group" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_password_field" />
 
     <Button
-        android:id="@+id/login_button"
+        android:id="@+id/activity_login_login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -130,20 +102,7 @@
         android:text="Log In"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_login_box" />
-
-    <Button
-        android:id="@+id/register_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:onClick="onRegisterClick"
-        android:text="Register"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_button" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_login_save_login_box" />
 
     <!--
     <ImageButton

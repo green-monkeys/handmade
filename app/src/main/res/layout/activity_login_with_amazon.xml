@@ -13,14 +13,15 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:background="@android:color/transparent"
         android:onClick="loginWithAmazonButtonClicked"
         app:layout_constraintBottom_toTopOf="@+id/login_as_artisan_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/btnlwa_drkgry_loginwithamazon" />
+        app:srcCompat="@drawable/android_gold_lwa_button" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/amazon_logo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -40,12 +41,12 @@
         android:onClick="loginAsExistingArtisanButtonClicked"
         android:text="Existing Artisan"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintEnd_toStartOf="@+id/new_artisan_button"
         app:layout_constraintStart_toStartOf="@+id/login_with_amazon_button"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/amazon_logo" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/new_artisan_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="loginAsNewArtisanButtonClicked"

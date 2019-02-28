@@ -1,7 +1,12 @@
 package com.greenmonkeys.handmade.persistence
 
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
 import at.favre.lib.crypto.bcrypt.BCrypt
 import java.nio.charset.Charset
+import java.security.KeyPair
+import java.security.KeyPairGenerator
+import java.security.KeyStore
 import java.util.regex.Pattern
 import kotlin.random.Random
 
@@ -21,12 +26,35 @@ object Security {
         return Password(hash, salt)
     }
 
+    private fun generateKeyPair(alias: String): KeyPair {
+        val kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore")
+        val parameterSpec = KeyGenParameterSpec.Builder(alias, KeyProperties.PURPOSE_SIGN)
+            .run{
+                setDigests(KeyProperties.DIGEST_SHA512)
+                build()
+            }
+        kpg.initialize(parameterSpec)
+        return kpg.generateKeyPair()
+    }
+
     fun passwordIsCorrect(password: Password, guess: String): Boolean {
         val verifyer = BCrypt.verifyer()
         val passwordIsValid = verifyer.verify((guess + password.salt).toCharArray(), password.hash)
         if (passwordIsValid.verified)
             return true
         return false
+    }
+
+    fun generateTemporaryPassword(): String {
+        val upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        val lower = upper.toLowerCase()
+        val numbers = "0123456789"
+        val alphaNum = upper + lower + numbers
+        var randomString = ""
+        for (i in 0..10) {
+            randomString += alphaNum[Random.nextInt(alphaNum.length)]
+        }
+        return randomString
     }
 
     private fun generateRandomString(length: Int): String {

@@ -1,229 +1,151 @@
 package com.greenmonkeys.handmade
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.provider.MediaStore
+import android.text.Html
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioGroup
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.greenmonkeys.handmade.persistence.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.io.File
+import java.io.FileOutputStream
 
 class RegisterActivity : AppCompatActivity() {
-    var accountTypeGroup: RadioGroup? = null
-    var linkAmazonAccount: Button? = null
+    lateinit var db: AppDatabase
 
-    var cgaIdField: EditText? = null
-    var cgaIdFieldBackground: Drawable? = null
-    var firstNameField: EditText? = null
-    var firstNameFieldBackground: Drawable? = null
-    var lastNameField: EditText? = null
-    var lastNameFieldBackground: Drawable? = null
-    var phoneNumberField: EditText? = null
-    var phoneNumberFieldBackground: Drawable? = null
-    var emailField: EditText? = null
-    var emailFieldBackground: Drawable? = null
-    var passwordField: EditText? = null
-    var passwordFieldBackground: Drawable? = null
-    var passwordConfirmField: EditText? = null
-    var passwordConfirmFieldBackground: Drawable? = null
+    lateinit var addPhoto: ImageButton
+    lateinit var firstNameField: EditText
+    lateinit var lastNameField: EditText
+    lateinit var emailField: EditText
+    lateinit var phoneField: EditText
+    lateinit var subscribeToSMS: CheckBox
+    lateinit var cgaEmail: EditText
+    lateinit var password: EditText
+    lateinit var confirmPassword: EditText
+    lateinit var errorList: TextView
 
-    var errorTextField: TextView? = null
-
-    var db: AppDatabase? = null
+    private lateinit var image: Bitmap
+    private var imageHasBeenTaken = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
-        cgaIdField = findViewById(R.id.cga_id)
-        cgaIdFieldBackground = cgaIdField?.background
-        firstNameField = findViewById(R.id.first_name)
-        firstNameFieldBackground = firstNameField?.background
-        lastNameField = findViewById(R.id.last_name)
-        lastNameFieldBackground = lastNameField?.background
-        phoneNumberField = findViewById(R.id.phone_number)
-        phoneNumberFieldBackground = phoneNumberField?.background
-        emailField = findViewById(R.id.email)
-        emailFieldBackground = emailField?.background
-        passwordField = findViewById(R.id.password)
-        passwordFieldBackground = passwordField?.background
-        passwordConfirmField = findViewById(R.id.password_confirm)
-        passwordConfirmFieldBackground = passwordConfirmField?.background
-        linkAmazonAccount = findViewById(R.id.link_amazon_button)
-
-        errorTextField = findViewById(R.id.error_text)
-
         db = DatabaseFactory.getDatabase(applicationContext)
 
-        accountTypeGroup = findViewById(R.id.account_type)
-        accountTypeGroup?.setOnCheckedChangeListener { _, checkedId ->
-            if (checkedId == R.id.cga) {
-                cgaIdField?.visibility = View.GONE
-                linkAmazonAccount?.visibility = View.VISIBLE
+        addPhoto = findViewById(R.id.activity_register_add_photo)
+        firstNameField = findViewById(R.id.activity_register_first_name)
+        lastNameField = findViewById(R.id.activity_register_last_name)
+        emailField = findViewById(R.id.activity_register_email)
+        phoneField = findViewById(R.id.activity_register_phone)
+        subscribeToSMS = findViewById(R.id.activity_register_sms_subscribe)
+        cgaEmail = findViewById(R.id.activity_register_cga_email)
+        password = findViewById(R.id.activity_register_password)
+        confirmPassword = findViewById(R.id.activity_register_confirm_password)
+        errorList = findViewById(R.id.activity_register_errors)
+    }
+
+    fun onRegisterClick(view: View) {
+        val errors = validateFields()
+        if (errors.isNotEmpty()) {
+            errorList.text = errors.joinToString("") { Html.fromHtml("&#8226; $it<br/>", Html.FROM_HTML_MODE_LEGACY) }
+            errorList.visibility = View.VISIBLE
+            return
+        } else {
+            errorList.visibility = View.GONE
+        }
+
+        val passwordHash = Security.generatePasswordHash(password.text.toString())
+        val artisan = Artisan(
+            cgaId = cgaEmail.text.toString(),
+            firstName = firstNameField.text.toString(),
+            lastName = lastNameField.text.toString(),
+            email = emailField.text.toString(),
+            password = passwordHash.hash,
+            salt = passwordHash.salt,
+            phone = phoneField.text.toString(),
+            phoneType = PhoneType.SMART,
+            smsNotifications = subscribeToSMS.isChecked,
+            hasLoggedIn = true
+        )
+
+        val successIntent = Intent(this, ArtisanHomeActivity::class.java)
+        successIntent.putExtra("EMAIL", artisan.email)
+        successIntent.putExtra("CGA_ID", artisan.cgaId)
+        doAsync {
+            if (!db.cgaDao().containsCGA(cgaEmail.text.toString())) {
+                val cga = CGA(cgaEmail.text.toString(), "", false)
+                db.cgaDao().insertCGA(cga)
+            }
+            if (db.artisanDao().containsArtisan(artisan.email, artisan.cgaId)) {
+                uiThread {
+                    errorList.text = "Artisan Already Exists"
+                    errorList.visibility = View.VISIBLE
+                }
             } else {
-                cgaIdField?.visibility = View.VISIBLE
-                linkAmazonAccount?.visibility = View.GONE
+                ImageStorage.saveImageToInternalStorage("${artisan.email}.png", image, applicationContext)
+                db.artisanDao().insertArtisan(artisan)
+                uiThread {
+                    startActivity(successIntent)
+                    finish()
+                }
             }
         }
     }
 
-    fun onRegisterClick(view: View) {
-        var fieldsAreValid = true
+    private fun validateFields(): ArrayList<String> {
+        val errors = ArrayList<String>()
+        if (!imageHasBeenTaken) {
+            errors.add("Image has not been taken.")
+        }
+        if (firstNameField.text.isEmpty()) {
+            errors.add("First name field is empty.")
+        }
+        if (lastNameField.text.isEmpty()) {
+            errors.add("Last name field is empty.")
+        }
+        if (emailField.text.isEmpty()) {
+            errors.add("Email field is empty.")
+        }
+        if (phoneField.text.isEmpty()) {
+            errors.add("Phone number field is empty.")
+        }
+        if (cgaEmail.text.isEmpty()) {
+            errors.add("CGA Email field is empty.")
+        }
+        if (password.text.isEmpty()) {
+            errors.add("Password field is empty.")
+        }
+        if (confirmPassword.text.isEmpty()) {
+            errors.add("Confirm Password field is empty")
+        }
+        if (password.text.toString() != confirmPassword.text.toString()) {
+            errors.add("Password does match not Confirm Password")
+        }
+        return errors
+    }
 
-        // Validate CGA ID
-        val cgaId = cgaIdField?.text.toString()
-        if (cgaIdField?.visibility != View.GONE) {
-            if (cgaId.isEmpty() || cgaId.toIntOrNull() == null) {
-                cgaIdField?.setBackgroundColor(Color.RED)
-                fieldsAreValid = false
-            } else if (cgaId.toIntOrNull() != null) {
-                doAsync {
-                    val cgaIsValid = db?.cgaDao()?.cgaIdIsValid(cgaId.toInt())
-                    if (cgaIsValid == false || cgaIsValid == null) {
-                        uiThread {
-                            cgaIdField?.setBackgroundColor(Color.RED)
-                            fieldsAreValid = false
-                        }
-                    } else {
-                        uiThread {
-                            cgaIdField?.background = cgaIdFieldBackground
-                        }
-                    }
-                }
+    fun onCameraClick(view: View) {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
             }
         }
+    }
 
-        // Validate First Name
-        val firstName = firstNameField?.text.toString()
-        if (firstName.isEmpty()) {
-            firstNameField?.setBackgroundColor(Color.RED)
-            fieldsAreValid = false
-        } else
-            firstNameField?.background = firstNameFieldBackground
-
-        // Validate Last Name
-        val lastName = lastNameField?.text.toString()
-        if (lastName.isEmpty()) {
-            lastNameField?.setBackgroundColor(Color.RED)
-            fieldsAreValid = false
-        } else
-            lastNameField?.background = lastNameFieldBackground
-
-        // Validate Phone Number
-        val phone = phoneNumberField?.text.toString()
-        if (phone.isEmpty()) {
-            phoneNumberField?.setBackgroundColor(Color.RED)
-            fieldsAreValid = false
-        } else
-            phoneNumberField?.background = phoneNumberFieldBackground
-
-        // Validate Email
-        val email = emailField?.text.toString()
-        if (!Security.isValidEmail(email)) {
-            emailField?.setBackgroundColor(Color.RED)
-            fieldsAreValid = false
-        } else
-            emailField?.background = emailFieldBackground
-
-        // Validate Password EXISTS (Not that it is correct)
-        val password = passwordField?.text.toString()
-        val passwordConfirm = passwordConfirmField?.text.toString()
-
-        val hashedPassword =
-            if (password == passwordConfirm && (password.length >= 8)) {
-                passwordField?.background = passwordFieldBackground
-                passwordConfirmField?.background = passwordConfirmFieldBackground
-                Security.generatePasswordHash(password)
-            } else if (password.length < 8 && passwordConfirm != password) {
-                passwordField?.setBackgroundColor(Color.RED)
-                passwordConfirmField?.setBackgroundColor(Color.RED)
-                fieldsAreValid = false
-                null
-            } else if (password.length < 8) {
-                passwordField?.setBackgroundColor(Color.RED)
-                fieldsAreValid = false
-                null
-            } else {
-                passwordConfirmField?.setBackgroundColor(Color.RED)
-                fieldsAreValid = false
-                null
-            }
-
-        val intent = Intent(this, HomeActivity::class.java)
-
-        if (hashedPassword != null && fieldsAreValid) {
-            if (accountTypeGroup?.checkedRadioButtonId == R.id.artisan) {
-                val artisan = Artisan(
-                    cgaId = cgaId.toInt(),
-                    firstName = firstName,
-                    lastName = lastName,
-                    email = email,
-                    password = hashedPassword.hash,
-                    salt = hashedPassword.salt,
-                    phone = phone,
-                    phoneType = PhoneType.SMART,
-                    smsNotifications = true
-                )
-
-                // Done asynchronously because DB accesses on the main thread are a no-no
-                doAsync {
-                    val artisanExists = db?.artisanDao()?.containsArtisan(artisan.email, artisan.cgaId)
-                    if (artisanExists == null || artisanExists == false) {
-                        db?.artisanDao()?.insertArtisan(artisan)
-                        uiThread {
-                            startActivity(intent.apply {
-                                intent.putExtra("ACCOUNT_TYPE", "artisan")
-                                intent.putExtra("cga_id", cgaId)
-                                intent.putExtra("email", email)
-                            })
-                        }
-                    } else {
-                        uiThread {
-                            errorTextField?.text = "E-mail already exists in database for given CGA ID."
-                            errorTextField?.visibility = View.VISIBLE
-                            emailField?.setBackgroundColor(Color.RED)
-                            cgaIdField?.setBackgroundColor(Color.RED)
-                            fieldsAreValid = false
-                        }
-                    }
-                }
-            } else if (accountTypeGroup?.checkedRadioButtonId == R.id.cga) {
-                val cga = CGA(
-                    id = 0,
-                    firstName = firstName,
-                    lastName = lastName,
-                    email = email,
-                    password = hashedPassword.hash,
-                    salt = hashedPassword.salt,
-                    phone = phone
-                )
-
-                // Done asynchronously because DB accesses on the main thread are a no-no
-                doAsync {
-                    if (db?.cgaDao()?.containsCGA(cga.email) == true) {
-                        uiThread {
-                            errorTextField?.text = "E-mail already exists in database."
-                            errorTextField?.visibility = View.VISIBLE
-                            fieldsAreValid = false
-                        }
-                    } else {
-                        db?.cgaDao()?.insertCGA(cga)
-                        uiThread {
-                            startActivity(intent.apply {
-                                intent.putExtra("ACCOUNT_TYPE", "cga")
-                                intent.putExtra("email", email)
-                            })
-                        }
-                    }
-                }
-            }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            image = data?.extras?.get("data") as Bitmap
+            addPhoto.setImageBitmap(image)
+            addPhoto.setBackgroundColor(Color.TRANSPARENT)
+            imageHasBeenTaken = true
         }
     }
 }

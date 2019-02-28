@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 
 object DatabaseFactory {
-    var db: AppDatabase? = null
+    private var db: AppDatabase? = null
 
     fun getDatabase(applicationContext: Context): AppDatabase {
         if (db == null) {

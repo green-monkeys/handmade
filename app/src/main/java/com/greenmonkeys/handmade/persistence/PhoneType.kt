@@ -4,11 +4,11 @@ import androidx.room.TypeConverter
 
 enum class PhoneType {
     NONE {
-        override fun toString() = "none"
+        override fun toString() = "None"
     }, SMART {
-        override fun toString() = "smart"
+        override fun toString() = "Smart"
     }, DUMB {
-        override fun toString() = "dumb"
+        override fun toString() = "Basic"
     }
 }
 

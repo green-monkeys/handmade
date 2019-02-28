@@ -45,7 +45,16 @@ dependencies {
     //implementation 'com.auth0.android:auth0:1.+'
     //implementation files('libs/Amazon-Android-SDKs/LoginWithAmazon/login-with-amazon-sdk.jar')
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation "com.commonsware.cwac:saferoom:1.0.0"
+    implementation 'com.commonsware.cwac:saferoom:1.0.0'
+    api 'com.github.wangjiegulu:rfab:2.0.0'
+    implementation files('libs/commons-codec-1.6.jar')
+    implementation files('libs/commons-logging-api-1.1.1.jar')
+    implementation files('libs/httpclient-4.2.3.jar')
+    implementation files('libs/httpcore-4.2.jar')
+    implementation files('libs/MaWSJavaClientLibrary-1.1.jar')
+    implementation files('libs/MWSClientJavaRuntime-1.0.jar')
+    implementation files('libs/MWSProducts_2011-10-01_v2017-03-22.jar')
+    api 'com.github.gcacace:signature-pad:1.2.1'
 }
 
 project.afterEvaluate {
