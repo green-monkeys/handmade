@@ -1,14 +1,18 @@
 package com.greenmonkeys.handmade;
 
 import com.greenmonkeys.handmade.payoutdenominations.USDollarWallet;
+import com.greenmonkeys.handmade.payoutdenominations.USDollarWalletManager;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class USDollarWalletTest {
     @Test public void testAdd() {
-        USDollarWallet wallet = new USDollarWallet(1000.0);
-        Assert.assertEquals(1000.0, wallet.total(), 0.001);
-        Assert.assertEquals(10, wallet.getHundred());
+        USDollarWallet wallet = new USDollarWallet(1010.0);
+        USDollarWallet wallet2 = new USDollarWallet(1010.0);
+        USDollarWallet combined = USDollarWalletManager.add(wallet, wallet2);
+        Assert.assertEquals(2020.0, combined.total(), 0.001);
+        Assert.assertEquals(20, combined.getHundred());
+        Assert.assertEquals(2, combined.getTen());
     }
 
     @Test public void testComposition() {
@@ -28,7 +32,7 @@ public class USDollarWalletTest {
     @Test public void testArrayAdd() {
         USDollarWallet w1 = new USDollarWallet (1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         USDollarWallet w2 = new USDollarWallet(10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
-        USDollarWallet addedWallets = USDollarWallet.addWalletsInArray( new USDollarWallet[] {w1,w2} );
+        USDollarWallet addedWallets = USDollarWalletManager.addWalletsInArray( new USDollarWallet[] {w1,w2} );
         Assert.assertEquals(addedWallets.getHundred(), 11);
         Assert.assertEquals(addedWallets.getFifty(), 11);
         Assert.assertEquals(addedWallets.getTwenty(), 11);
