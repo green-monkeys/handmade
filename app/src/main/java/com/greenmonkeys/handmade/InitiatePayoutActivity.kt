@@ -8,19 +8,31 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
+import android.widget.*
+import com.greenmonkeys.handmade.persistence.AppDatabase
+import com.greenmonkeys.handmade.persistence.DatabaseFactory
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 const val CONFIRM_PAYOUT_INTENT = 1
 
 class InitiatePayoutActivity : AppCompatActivity() {
+    lateinit var artisanSelector: Spinner
     lateinit var payoutAmount: EditText
     lateinit var cancelButton: Button
     lateinit var confirmButton: Button
 
+    lateinit var db: AppDatabase
+
+    lateinit var cgaId: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_initiate_payout)
+
+        db = DatabaseFactory.getDatabase(applicationContext)
+
+        cgaId = intent.getStringExtra("USER_EMAIL")
 
         payoutAmount = findViewById(R.id.activity_initiate_payout_amount)
         payoutAmount.addTextChangedListener(object: TextWatcher {
@@ -38,6 +50,17 @@ class InitiatePayoutActivity : AppCompatActivity() {
         })
         cancelButton = findViewById(R.id.activity_initiate_payout_cancel)
         confirmButton = findViewById(R.id.activity_initiate_payout_confirm)
+
+        artisanSelector = findViewById(R.id.activity_initiate_payout_artisan_selector)
+        doAsync {
+            val artisans = db.cgaDao().getArtisansForCGA(cgaId)
+            val adapter = ArrayAdapter<String>(applicationContext, R.layout.simple_spinner_item, artisans.map { it.getFullName() })
+            adapter.setDropDownViewResource(R.layout.simple_spinner_item)
+
+            uiThread {
+                artisanSelector.adapter = adapter
+            }
+        }
     }
 
     fun onConfirmClick(view: View?) {

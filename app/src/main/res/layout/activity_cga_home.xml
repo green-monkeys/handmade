@@ -6,25 +6,92 @@
     android:layout_height="match_parent"
     tools:context=".CGAHomeActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/activity_cga_home_artisan_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activity_cga_home_user_information_text_view" />
-
-    <TextView
-        android:id="@+id/activity_cga_home_user_information_text_view"
+    <fragment
+        android:id="@+id/activity_cga_home_list_fragment"
+        android:name="com.greenmonkeys.handmade.ArtisanListFragment"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/activity_cga_home_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout xmlns:rfal="http://schemas.android.com/apk/res-auto"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/activity_cga_home_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/cga_home_menu">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    <!--
+    <EditText
+        android:id="@+id/activity_cga_home_search_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Search"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/fragment_artisan_list_group_name_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Group Name"
+        android:inputType="textPersonName"
+        android:text=""
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_cga_home_search_bar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_artisan_list_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_artisan_list_group_name_field" />
+    -->
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fragment_artisan_list_selection_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:onClick="onSaveButtonClicked"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_save_24px" />
+
+    <ImageButton
+        android:id="@+id/fragment_artisan_list_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:drawable/screen_background_light_transparent"
+        android:contentDescription="Cancel Button"
+        android:onClick="onCancelButtonClicked"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_baseline_cancel_24px" />
+
+    <com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout
         android:id="@+id/activity_cga_home_rfal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/activity_cga_home_navigation"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton xmlns:rfab="http://schemas.android.com/apk/res-auto"
             android:id="@+id/activity_cga_home_rfab"
@@ -42,5 +109,7 @@
             rfab:rfab_shadow_dx="0dp"
             rfab:rfab_shadow_dy="5dp"
             rfab:rfab_size="normal" />
+
     </com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

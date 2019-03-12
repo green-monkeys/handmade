@@ -8,7 +8,11 @@ import androidx.room.Index
 @Entity(
     foreignKeys = [ForeignKey(entity = CGA::class, parentColumns = arrayOf("email"), childColumns = arrayOf("cga_id"))],
     primaryKeys = ["email", "cga_id"],
-    indices = [Index(value = ["email"], unique = true), Index(value = ["cga_id"])]
+    indices = [
+        Index(value = ["email"]),
+        Index(value = ["cga_id"]),
+        Index(value = ["email", "cga_id"], unique = true)
+    ]
 )
 data class Artisan(
     @ColumnInfo(name = "cga_id") val cgaId: String,
