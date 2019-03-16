@@ -1,10 +1,20 @@
 package com.greenmonkeys.handmade.payout_denominations;
 
+import java.util.ArrayList;
+
 public class PesoWallet {
 
-    private int fiveHundred,twoHundred, oneHundred, fifty, twenty, ten, five, two, one, fiftyCent, twentyCent, tenCent, fiveCent, oneCent;
+    private ArrayList<Integer> walletValues = new ArrayList<>();
 
-    public PesoWallet(int fiveHundred, int twoHundred, int oneHundred,
+    public PesoWallet(ArrayList<Integer> values){
+        if(values.size()!=14){
+            System.err.println("Creating a PesoWallet needs and arrayList of 14 values");
+            System.exit(1);
+        }
+        walletValues.addAll(values);
+    }
+
+    /*int fiveHundred, int twoHundred, int oneHundred,
                       int fifty, int twenty, int ten, int five,
                       int two, int one, int fiftyCent, int twentyCent,
                       int tenCent, int fiveCent, int oneCent){
@@ -23,66 +33,47 @@ public class PesoWallet {
         this.tenCent=tenCent;
         this.fiveCent=fiveCent;
         this.oneCent=oneCent;
-    }
+    }*/
     public int getFiveHundred(){
-        return fiveHundred;
+        return walletValues.get(0);
     }
     public int getTwoHundred(){
-        return twoHundred;
+        return walletValues.get(1);
     }
     public int getOneHundred(){
-        return oneHundred;
+        return walletValues.get(2);
     }
     public int getFifty(){
-        return fifty;
+        return walletValues.get(3);
     }
     public int getTwenty(){
-        return twenty;
+        return walletValues.get(4);
     }
     public int getTen(){
-        return ten;
+        return walletValues.get(5);
     }
     public int getFive(){
-        return five;
+        return walletValues.get(6);
     }
     public int getTwo(){
-        return two;
+        return walletValues.get(7);
     }
     public int getOne(){
-        return one;
+        return walletValues.get(8);
     }
     public int getFiftyCent(){
-        return fiftyCent;
+        return walletValues.get(9);
     }
     public int getTwentyCent(){
-        return twentyCent;
+        return walletValues.get(10);
     }
     public int getTenCent(){
-        return tenCent;
+        return walletValues.get(11);
     }
     public int getFiveCent(){
-        return fiveCent;
+        return walletValues.get(12);
     }
     public int getOneCent(){
-        return oneCent;
+        return walletValues.get(13);
     }
-
-    /*
-     *  Creates a new PesoWallet with the sum of the other PesoWallet and the second PesoWallet
-     */
-    public void add(PesoWallet other){
-        this.fiveHundred += other.getFiveHundred();
-        this.twoHundred += other.getTwoHundred();
-        this.oneHundred += other.getOneHundred();
-        this.fifty += other.getFifty();
-        this.twenty += other.getTwenty();
-        this.ten += other.getTen();
-        this.five += other.getFive();
-        this.two += other.getTwo();
-        this.one += other.getOne();
-        this.fiftyCent += other.getFiftyCent();
-        this.twentyCent += other.getTwentyCent();
-        this.tenCent += other.getTenCent();
-        this.fiveCent += other.getFiveCent();
-        this.oneCent += other.getOneCent();    }
 }
